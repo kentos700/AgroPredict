@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="error-panel mx-auto">
+            <span class="error-code">{{ status_code or 400 }}</span>
+            <h1>{{ title or "Ошибка" }}</h1>
+            <p>{{ message or "Не удалось обработать запрос." }}</p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+                <a href="{{ url_for('main.index') }}" class="btn btn-harvest">На главную</a>
+                <a href="{{ url_for('main.predict') }}" class="btn btn-outline-earth">К форме прогноза</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

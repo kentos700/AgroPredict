@@ -1,0 +1,48 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">SQLite</span>
+            <h1>История прогнозов</h1>
+            <p>Каждый расчёт сохраняется в базе данных и отображается от новых записей к старым.</p>
+        </div>
+
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Культура</th>
+                            <th>Регион</th>
+                            <th>Сезон</th>
+                            <th class="text-end">Прогноз, т/га</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if records %}
+                            {% for item in records %}
+                                <tr>
+                                    <td>{{ item.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                                    <td>{{ item.crop|translate_value }}</td>
+                                    <td>{{ item.region|translate_value }}</td>
+                                    <td>{{ item.season|translate_value }}</td>
+                                    <td class="text-end fw-bold">{{ '%.2f'|format(item.predicted_yield) }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    История пока пуста. Сделайте первый прогноз, и таблица заполнится.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

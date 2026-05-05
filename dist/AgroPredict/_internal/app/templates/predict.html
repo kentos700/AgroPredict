@@ -1,0 +1,125 @@
+﻿{% extends "base.html" %}
+
+{% macro field_errors(form, field) -%}
+    {% if form.errors.get(field) %}
+        <div class="invalid-feedback d-block">{{ form.errors[field][0] }}</div>
+    {% endif %}
+{%- endmacro %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">Форма прогноза</span>
+            <h1>Введите параметры участка</h1>
+            <p>После отправки данные будут преобразованы в pandas DataFrame, обработаны ML‑pipeline и сохранены в историю.</p>
+        </div>
+
+        <form method="post" action="{{ url_for('main.predict') }}" class="prediction-form card-form needs-soft-check" novalidate>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <label for="region" class="form-label">{{ form.label('region') }}</label>
+                    <select id="region" name="region" class="form-select {{ 'is-invalid' if form.errors.get('region') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('region') else '' }}>Выберите регион</option>
+                        {% for option in form.choices('region') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('region') == option else '' }}>{{ form.choice_label('region', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'region') }}
+                </div>
+
+                <div class="col-lg-6">
+                    <label for="crop" class="form-label">{{ form.label('crop') }}</label>
+                    <select id="crop" name="crop" class="form-select {{ 'is-invalid' if form.errors.get('crop') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('crop') else '' }}>Выберите культуру</option>
+                        {% for option in form.choices('crop') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('crop') == option else '' }}>{{ form.choice_label('crop', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'crop') }}
+                </div>
+
+                {% for field in ['rainfall', 'temperature', 'humidity'] %}
+                    {% set rule = form.numeric_rule(field) %}
+                    <div class="col-md-4">
+                        <label for="{{ field }}" class="form-label">{{ rule.label }}</label>
+                        <input type="number" step="{{ rule.step }}" id="{{ field }}" name="{{ field }}" value="{{ form.value(field) }}" placeholder="{{ rule.placeholder }}" class="form-control {{ 'is-invalid' if form.errors.get(field) else '' }}" required>
+                        {{ field_errors(form, field) }}
+                    </div>
+                {% endfor %}
+
+                <div class="col-md-6">
+                    <label for="soil_type" class="form-label">{{ form.label('soil_type') }}</label>
+                    <select id="soil_type" name="soil_type" class="form-select {{ 'is-invalid' if form.errors.get('soil_type') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('soil_type') else '' }}>Выберите тип почвы</option>
+                        {% for option in form.choices('soil_type') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('soil_type') == option else '' }}>{{ form.choice_label('soil_type', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'soil_type') }}
+                </div>
+
+                <div class="col-md-6">
+                    {% set rule = form.numeric_rule('soil_ph') %}
+                    <label for="soil_ph" class="form-label">{{ rule.label }}</label>
+                    <input type="number" step="{{ rule.step }}" id="soil_ph" name="soil_ph" value="{{ form.value('soil_ph') }}" placeholder="{{ rule.placeholder }}" class="form-control {{ 'is-invalid' if form.errors.get('soil_ph') else '' }}" required>
+                    {{ field_errors(form, 'soil_ph') }}
+                </div>
+
+                {% for field in ['nitrogen', 'phosphorus', 'potassium'] %}
+                    {% set rule = form.numeric_rule(field) %}
+                    <div class="col-md-4">
+                        <label for="{{ field }}" class="form-label">{{ rule.label }}</label>
+                        <input type="number" step="{{ rule.step }}" id="{{ field }}" name="{{ field }}" value="{{ form.value(field) }}" placeholder="{{ rule.placeholder }}" class="form-control {{ 'is-invalid' if form.errors.get(field) else '' }}" required>
+                        {{ field_errors(form, field) }}
+                    </div>
+                {% endfor %}
+
+                <div class="col-md-4">
+                    <label for="fertilizer_used" class="form-label">{{ form.label('fertilizer_used') }}</label>
+                    <select id="fertilizer_used" name="fertilizer_used" class="form-select {{ 'is-invalid' if form.errors.get('fertilizer_used') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('fertilizer_used') else '' }}>Выберите</option>
+                        {% for option in form.choices('fertilizer_used') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('fertilizer_used') == option else '' }}>{{ form.choice_label('fertilizer_used', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'fertilizer_used') }}
+                </div>
+
+                <div class="col-md-4">
+                    <label for="irrigation" class="form-label">{{ form.label('irrigation') }}</label>
+                    <select id="irrigation" name="irrigation" class="form-select {{ 'is-invalid' if form.errors.get('irrigation') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('irrigation') else '' }}>Выберите</option>
+                        {% for option in form.choices('irrigation') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('irrigation') == option else '' }}>{{ form.choice_label('irrigation', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'irrigation') }}
+                </div>
+
+                <div class="col-md-4">
+                    {% set rule = form.numeric_rule('area') %}
+                    <label for="area" class="form-label">{{ rule.label }}</label>
+                    <input type="number" step="{{ rule.step }}" id="area" name="area" value="{{ form.value('area') }}" placeholder="{{ rule.placeholder }}" class="form-control {{ 'is-invalid' if form.errors.get('area') else '' }}" required>
+                    {{ field_errors(form, 'area') }}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="season" class="form-label">{{ form.label('season') }}</label>
+                    <select id="season" name="season" class="form-select {{ 'is-invalid' if form.errors.get('season') else '' }}" required>
+                        <option value="" disabled {{ 'selected' if not form.value('season') else '' }}>Выберите сезон</option>
+                        {% for option in form.choices('season') %}
+                            <option value="{{ option }}" {{ 'selected' if form.value('season') == option else '' }}>{{ form.choice_label('season', option) }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ field_errors(form, 'season') }}
+                </div>
+
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-harvest btn-lg w-100">Рассчитать урожайность</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

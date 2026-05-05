@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="result-hero">
+            <span class="eyebrow">Результат модели</span>
+            <h1>{{ result.predicted_yield }} т/га</h1>
+            <p>
+                Прогнозируемая урожайность для культуры <strong>{{ result.crop }}</strong>
+                в регионе <strong>{{ result.region }}</strong> на сезон <strong>{{ result.season }}</strong>.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+                <a href="{{ url_for('main.predict') }}" class="btn btn-harvest">Сделать новый прогноз</a>
+                <a href="{{ url_for('main.history') }}" class="btn btn-outline-earth">Открыть историю</a>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-4">
+            <div class="col-lg-5">
+                <div class="feature-card h-100">
+                    <h2>Пояснение</h2>
+                    <p>
+                        Значение рассчитано ML-pipeline, который выполняет кодирование категориальных признаков,
+                        масштабирование числовых параметров и прогнозирование обученной регрессионной моделью.
+                    </p>
+                    <p class="mb-0">
+                        Результат является оценкой для учебного проекта. Для промышленного применения модель следует
+                        дообучить на более крупном и репрезентативном региональном наборе данных.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Параметр</th>
+                                    <th>Значение</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for label, value in result.parameters %}
+                                    <tr>
+                                        <td>{{ label }}</td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

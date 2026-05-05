@@ -1,0 +1,27 @@
+{
+    "generated_at": "2026-04-15T21:24:33.406371+00:00",
+    "dataset_rows": 84,
+    "target": "Yield",
+    "best_model": "GradientBoostingRegressor",
+    "selection_rule": "maximum R2, then minimum RMSE",
+    "models": {
+        "LinearRegression": {
+            "MAE": 1.1498219503873812,
+            "MSE": 2.184830472288868,
+            "RMSE": 1.4781172051934406,
+            "R2": 0.9856635047430268
+        },
+        "RandomForestRegressor": {
+            "MAE": 1.171360256835135,
+            "MSE": 2.207165317393932,
+            "RMSE": 1.4856531618765976,
+            "R2": 0.9855169471931503
+        },
+        "GradientBoostingRegressor": {
+            "MAE": 1.0770953781701973,
+            "MSE": 2.1117787223057105,
+            "RMSE": 1.4531960371215271,
+            "R2": 0.9861428582125205
+        }
+    }
+}

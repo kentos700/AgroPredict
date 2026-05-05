@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="content-section">
+    <div class="container">
+        <div class="section-heading">
+            <span class="eyebrow">ML Dashboard</span>
+            <h1>Аналитика моделей</h1>
+            <p>Здесь отображаются метрики обучения, сравнение алгоритмов и важность признаков.</p>
+        </div>
+
+        {% if metrics %}
+            {% set best = metrics.models[metrics.best_model] %}
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="metric-card"><span>Лучшая модель</span><strong>{{ metrics.best_model }}</strong></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card"><span>MAE</span><strong>{{ '%.3f'|format(best.MAE) }}</strong></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card"><span>RMSE</span><strong>{{ '%.3f'|format(best.RMSE) }}</strong></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card"><span>R²</span><strong>{{ '%.3f'|format(best.R2) }}</strong></div>
+                </div>
+            </div>
+
+            <div class="table-card mb-4">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Модель</th>
+                                <th>MAE</th>
+                                <th>MSE</th>
+                                <th>RMSE</th>
+                                <th>R²</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for model_name, model_metrics in metrics.models.items() %}
+                                <tr>
+                                    <td class="fw-bold">{{ model_name }}</td>
+                                    <td>{{ '%.3f'|format(model_metrics.MAE) }}</td>
+                                    <td>{{ '%.3f'|format(model_metrics.MSE) }}</td>
+                                    <td>{{ '%.3f'|format(model_metrics.RMSE) }}</td>
+                                    <td>{{ '%.3f'|format(model_metrics.R2) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning shadow-sm">
+                Метрики не найдены. Запустите обучение модели командой <code>python ml/train_model.py</code>.
+            </div>
+        {% endif %}
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="chart-card h-100">
+                    <h2>Сравнение моделей</h2>
+                    {% if model_comparison_url %}
+                        <img src="{{ model_comparison_url }}" alt="График сравнения моделей" class="img-fluid rounded-4">
+                    {% else %}
+                        <p class="text-muted mb-0">График model_comparison.png еще не создан.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card h-100">
+                    <h2>Важность признаков</h2>
+                    {% if feature_importance_url %}
+                        <img src="{{ feature_importance_url }}" alt="График важности признаков" class="img-fluid rounded-4">
+                    {% else %}
+                        <p class="text-muted mb-0">График feature_importance.png еще не создан.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
